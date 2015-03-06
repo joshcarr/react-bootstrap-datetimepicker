@@ -51,10 +51,10 @@ DateTimeField = React.createClass({
     });
   },
   onChange: function(event) {
-    if (moment(event.target.value, this.props.format).isValid()) {
+    if (moment(event.target.value, this.props.inputFormat).isValid()) {
       this.setState({
-        selectedDate: moment(event.target.value, this.props.format),
-        inputValue: moment(event.target.value, this.props.format).format(this.props.inputFormat)
+        selectedDate: moment(event.target.value, this.props.inputFormat),
+        inputValue: moment(event.target.value, this.props.inputFormat).format(this.props.inputFormat)
       });
     } else {
       this.setState({
