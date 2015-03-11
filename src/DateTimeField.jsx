@@ -53,6 +53,7 @@ DateTimeField = React.createClass({
   onChange: function(event) {
     if (moment(event.target.value, this.props.inputFormat).isValid()) {
       this.setState({
+        viewDate: moment(event.target.value, this.props.inputFormat).startOf("month"),
         selectedDate: moment(event.target.value, this.props.inputFormat),
         inputValue: moment(event.target.value, this.props.inputFormat).format(this.props.inputFormat)
       });
@@ -62,7 +63,7 @@ DateTimeField = React.createClass({
       });
       console.log("This is not a valid date");
     }
-    return this.props.onChange(this.state.selectedDate.format(this.props.format));
+    return this.props.onChange(moment(event.target.value, this.props.inputFormat).format(this.props.format));
   },
   setSelectedDate: function(e) {
     return this.setState({

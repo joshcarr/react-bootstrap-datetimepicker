@@ -8,6 +8,7 @@ var SetState = React.createClass({
     };
   },
   blah: function ( a ) {
+    console.log(a);
     this.setState({
       dateTime: a
     });
