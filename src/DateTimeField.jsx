@@ -169,10 +169,14 @@ DateTimeField = React.createClass({
     if (this.state.selectedDate.hour() > 12) {
       return this.setState({
         selectedDate: this.state.selectedDate.clone().subtract(12, 'hours')
+      }, function() {
+        return this.props.onChange(this.state.selectedDate.format(this.props.format));
       });
     } else {
       return this.setState({
         selectedDate: this.state.selectedDate.clone().add(12, 'hours')
+      }, function() {
+        return this.props.onChange(this.state.selectedDate.format(this.props.format));
       });
     }
   },
