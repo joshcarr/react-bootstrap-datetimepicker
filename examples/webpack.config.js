@@ -2,6 +2,7 @@ module.exports = {
 
   entry: {
     'basic': './examples/basic/basic.jsx',
+    'setstate': './examples/setstate/setstate.jsx',
   },
 
   output: {
