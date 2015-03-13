@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var DateTimeField = require('react-bootstrap-datetimepicker');
+var moment = require('moment');
 
 var SetState = React.createClass({
   getInitialState: function() {
@@ -8,13 +9,15 @@ var SetState = React.createClass({
     };
   },
   blah: function ( a ) {
-    console.log(a);
+    
     this.setState({
       dateTime: a
     });
+
+    console.log(moment(+a).format(), moment(+this.state.dateTime).format());
   },
   render: function () {
-    console.log( this.state.dateTime );
+    
     return <DateTimeField dateTime={this.state.dateTime} onChange={this.blah}/>;
   }
 
