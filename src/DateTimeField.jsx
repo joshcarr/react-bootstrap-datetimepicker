@@ -1,6 +1,6 @@
 var DateTimeField, DateTimePicker, Glyphicon, React, moment;
 
-React = require('react');
+React = require('react/addons');
 
 DateTimePicker = require('./DateTimePicker');
 
@@ -44,15 +44,18 @@ DateTimeField = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
+    this.refs.theInput.getDOMNode().value = moment(nextProps.dateTime, nextProps.format).format( nextProps.inputFormat);
     return this.setState({
       viewDate: moment(nextProps.dateTime, nextProps.format).startOf("month"),
       selectedDate: moment(nextProps.dateTime, nextProps.format),
       inputValue: moment(nextProps.dateTime, nextProps.format).format(nextProps.inputFormat)
     });
   },
-  onChange: function(event) {
+  handleChange: function(event) {
+    this.refs.theInput.getDOMNode().value = moment(event.target.value,  this.props.inputFormat).format( this.props.inputFormat);
     if (moment(event.target.value, this.props.inputFormat).isValid()) {
       this.setState({
+        viewDate: moment(event.target.value, this.props.inputFormat).startOf("month"),
         selectedDate: moment(event.target.value, this.props.inputFormat),
         inputValue: moment(event.target.value, this.props.inputFormat).format(this.props.inputFormat)
       });
@@ -62,38 +65,51 @@ DateTimeField = React.createClass({
       });
       console.log("This is not a valid date");
     }
-    return this.props.onChange(this.state.selectedDate.format(this.props.format));
+    return this.props.onChange(moment(event.target.value, this.props.inputFormat).format(this.props.format));
   },
   setSelectedDate: function(e) {
+    var newDate = moment(this.state.selectedDate);
+    newDate.date(parseInt(e.target.innerHTML));
+
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+
     return this.setState({
-      selectedDate: this.state.viewDate.clone().date(parseInt(e.target.innerHTML)).hour(this.state.selectedDate.hours()).minute(this.state.selectedDate.minutes())
+      selectedDate: newDate
     }, function() {
+
       this.closePicker();
-      this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
       return this.setState({
-        inputValue: this.state.selectedDate.format(this.props.inputFormat)
+        viewDate: newDate.format(this.props.inputFormat),
+        inputValue: newDate.format(this.props.inputFormat)
       });
     });
   },
   setSelectedHour: function(e) {
+    var newDate = moment(this.state.selectedDate);
+    newDate.hour(parseInt(e.target.innerHTML));
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().hour(parseInt(e.target.innerHTML)).minute(this.state.selectedDate.minutes())
+      selectedDate:newDate
     }, function() {
       this.closePicker();
-      this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
       return this.setState({
-        inputValue: this.state.selectedDate.format(this.props.inputFormat)
+        inputValue: newDate.format(this.props.inputFormat)
       });
     });
   },
   setSelectedMinute: function(e) {
+    var newDate = moment(this.state.selectedDate);
+    newDate.minute(parseInt(e.target.innerHTML));
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().hour(this.state.selectedDate.hours()).minute(parseInt(e.target.innerHTML))
+      selectedDate:newDate
     }, function() {
       this.closePicker();
-      this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
       return this.setState({
-        inputValue: this.state.selectedDate.format(this.props.inputFormat)
+        inputValue: newDate.format(this.props.inputFormat)
       });
     });
   },
@@ -108,17 +124,25 @@ DateTimeField = React.createClass({
     });
   },
   addMinute: function() {
+    var newDate = moment(this.state.selectedDate);
+    newDate.add(1, "minutes");
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().add(1, "minutes")
+      selectedDate: newDate
     }, function() {
-      return this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
     });
   },
   addHour: function() {
+    var newDate = moment(this.state.selectedDate);
+    newDate.add(1, "hours");
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().add(1, "hours")
+      selectedDate: newDate
     }, function() {
-      return this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
     });
   },
   addMonth: function() {
@@ -137,17 +161,25 @@ DateTimeField = React.createClass({
     });
   },
   subtractMinute: function() {
+    var newDate = moment(this.state.selectedDate);
+    newDate.subtract(1, "minutes");
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().subtract(1, "minutes")
+      selectedDate: newDate
     }, function() {
-      return this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
     });
   },
   subtractHour: function() {
+    var newDate = moment(this.state.selectedDate);
+    newDate.subtract(1, "hours");
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+
     return this.setState({
-      selectedDate: this.state.selectedDate.clone().subtract(1, "hours")
+      selectedDate: newDate
     }, function() {
-      return this.props.onChange(this.state.selectedDate.format(this.props.format));
+      this.props.onChange(newDate.format(this.props.format));
     });
   },
   subtractMonth: function() {
@@ -166,19 +198,18 @@ DateTimeField = React.createClass({
     });
   },
   togglePeriod: function() {
+    var newDate = moment(this.state.selectedDate);
     if (this.state.selectedDate.hour() > 12) {
-      return this.setState({
-        selectedDate: this.state.selectedDate.clone().subtract(12, 'hours')
-      }, function() {
-        return this.props.onChange(this.state.selectedDate.format(this.props.format));
-      });
+      newDate.subtract(12, 'hours');
     } else {
-      return this.setState({
-        selectedDate: this.state.selectedDate.clone().add(12, 'hours')
-      }, function() {
-        return this.props.onChange(this.state.selectedDate.format(this.props.format));
-      });
+      newDate.add(12, 'hours');
     }
+    this.refs.theInput.getDOMNode().value = newDate.format( this.props.inputFormat);
+    return this.setState({
+      selectedDate: newDate
+    }, function() {
+      return this.props.onChange(newDate.format(this.props.format));
+    });
   },
   togglePicker: function() {
     return this.setState({
@@ -256,6 +287,7 @@ DateTimeField = React.createClass({
       return <span />;
     }
   },
+  mixins: [React.addons.LinkedStateMixin],
   render: function() {
     return (
           <div>
@@ -289,7 +321,14 @@ DateTimeField = React.createClass({
                   togglePeriod={this.togglePeriod}
             />
             <div className="input-group date" ref="datetimepicker">
-              <input type="text" className="form-control" onChange={this.onChange} value={this.state.selectedDate.format(this.props.inputFormat)} />
+              <input
+                ref="theInput"
+                type="text"
+                className="form-control"
+                onBlur={this.handleChange}
+                //value={this.state.selectedDate.format(this.props.inputFormat)}
+                defaultValue={this.state.selectedDate.format(this.props.inputFormat)}
+              />
               <span className="input-group-addon" onClick={this.onClick} onBlur={this.onBlur} ref="dtpbutton"><Glyphicon glyph="calendar" /></span>
             </div>
           </div>
