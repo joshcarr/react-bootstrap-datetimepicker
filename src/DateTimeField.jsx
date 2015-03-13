@@ -44,6 +44,7 @@ DateTimeField = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps) {
+    this.refs.theInput.getDOMNode().value = moment(nextProps.dateTime, nextProps.format).format( nextProps.inputFormat);
     return this.setState({
       viewDate: moment(nextProps.dateTime, nextProps.format).startOf("month"),
       selectedDate: moment(nextProps.dateTime, nextProps.format),
